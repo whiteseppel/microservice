@@ -1,0 +1,61 @@
+[1mdiff --git a/Dockerfile b/Dockerfile[m
+[1mindex 3426d8a..e69de29 100644[m
+[1m--- a/Dockerfile[m
+[1m+++ b/Dockerfile[m
+[36m@@ -1,4 +0,0 @@[m
+[31m-FROM openjdk[m
+[31m-COPY target/classes/com/ /tmp[m
+[31m-WORKDIR /tmp[m
+[31m-CMD java example.demo DemoApplication[m
+\ No newline at end of file[m
+[1mdiff --git a/src/main/java/com/example/demo/student/StudentController.java b/src/main/java/com/example/demo/student/StudentController.java[m
+[1mindex 9cdec15..bc35b8d 100644[m
+[1m--- a/src/main/java/com/example/demo/student/StudentController.java[m
+[1m+++ b/src/main/java/com/example/demo/student/StudentController.java[m
+[36m@@ -23,13 +23,11 @@[m [mpublic class StudentController {[m
+ [m
+     @PostMapping[m
+     public void registerNewStudent(@RequestBody Student student){[m
+[31m-        System.out.println("Register new student");[m
+         studentService.addNewStudent(student);[m
+     }[m
+ [m
+     @DeleteMapping(path = "{studentId}")[m
+     public void deleteStudent(@PathVariable("studentId") Long studentId){[m
+[31m-        System.out.println("Delete student with id " + studentId);[m
+         studentService.deleteStudent(studentId);[m
+     }[m
+ }[m
+[1mdiff --git a/src/main/java/com/example/demo/student/StudentService.java b/src/main/java/com/example/demo/student/StudentService.java[m
+[1mindex dd9c732..24b4e49 100644[m
+[1m--- a/src/main/java/com/example/demo/student/StudentService.java[m
+[1m+++ b/src/main/java/com/example/demo/student/StudentService.java[m
+[36m@@ -18,22 +18,28 @@[m [mpublic class StudentService {[m
+     }[m
+ [m
+     public List<Student> getStudents(){[m
+[32m+[m[32m        System.out.println("Returning all students");[m
+         return studentRepository.findAll();[m
+     }[m
+ [m
+[32m+[m
+     public void addNewStudent(Student student) {[m
+         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());[m
+         if(studentOptional.isPresent()){[m
+             throw new IllegalStateException("email already taken");[m
+         }[m
+         studentRepository.save(student);[m
+[32m+[m[32m        System.out.println("Creating new student with parameters: ");[m
+[32m+[m[32m        student.toString();[m
+     }[m
+ [m
+[32m+[m
+     public void deleteStudent(Long studentId) {[m
+         boolean exists = studentRepository.existsById(studentId);[m
+         if(!exists){[m
+             throw new IllegalStateException("Student with ID " + studentId +" does not exist");[m
+         }[m
+         studentRepository.deleteById(studentId);[m
+[32m+[m[32m        System.out.println("Deleting student with id " + studentId);[m
+     }[m
+ }[m

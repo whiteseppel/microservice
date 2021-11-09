@@ -18,8 +18,10 @@ public class StudentService {
     }
 
     public List<Student> getStudents(){
+        System.out.println("Returning all students");
         return studentRepository.findAll();
     }
+
 
     public void addNewStudent(Student student) {
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
@@ -27,7 +29,10 @@ public class StudentService {
             throw new IllegalStateException("email already taken");
         }
         studentRepository.save(student);
+        System.out.println("Creating new student with parameters: ");
+        student.toString();
     }
+
 
     public void deleteStudent(Long studentId) {
         boolean exists = studentRepository.existsById(studentId);
@@ -35,5 +40,6 @@ public class StudentService {
             throw new IllegalStateException("Student with ID " + studentId +" does not exist");
         }
         studentRepository.deleteById(studentId);
+        System.out.println("Deleting student with id " + studentId);
     }
 }
